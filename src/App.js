@@ -1,26 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext } from "react";
+import { SocketContext } from "./obsWebsocket";
+import AudioBoard from "./AudioBoard";
+import SceneButtons from "./SceneButtons";
+import ConnectForm from "./ConnectForm";
+import Layout from "./Layout";
+import Divider from "@material-ui/core/Divider";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+const App = () => {
+  const { connected, disconnect } = useContext(SocketContext);
+  return connected ? (
+    <Layout disconnect={disconnect}>
+      <SceneButtons />
+      <Divider style={{margin: '20px 0'}} />
+      <AudioBoard />
+    </Layout>
+  ) : (
+    <ConnectForm />
   );
-}
+};
 
 export default App;
