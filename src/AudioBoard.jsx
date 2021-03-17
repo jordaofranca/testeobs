@@ -38,10 +38,6 @@ const AudioBoard = () => {
         alignItems: 'flex-start'
       }}
     >
-      <Typography component="h2" variant="h5" style={{ marginBottom: 20 }}>
-        Audio Sources
-      </Typography>
-
       <Grid container spacing={2}>
         {sources.map((src) => (
           <Grid item xs={6} sm={3} md={2} key={src.name}>

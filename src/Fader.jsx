@@ -90,9 +90,6 @@ export default function CustomizedSlider({ src }) {
         setMuted(data.muted);
       }
     });
-    return {
-
-    }
   }, [obsSocket, src.name]);
 
   return (

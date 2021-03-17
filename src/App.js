@@ -4,16 +4,17 @@ import AudioBoard from "./AudioBoard";
 import SceneButtons from "./SceneButtons";
 import ConnectForm from "./ConnectForm";
 import Layout from "./Layout";
-import Divider from "@material-ui/core/Divider";
+import { Router } from "@reach/router";
 
 const App = () => {
   const { connected, disconnect } = useContext(SocketContext);
   return connected ? (
-    <Layout disconnect={disconnect}>
-      <SceneButtons />
-      <Divider style={{margin: '20px 0'}} />
-      <AudioBoard />
-    </Layout>
+    <Router>
+      <Layout disconnect={disconnect} path="/"> 
+        <SceneButtons exact path="/" />
+        <AudioBoard path="/audio" />
+      </Layout>
+    </Router>
   ) : (
     <ConnectForm />
   );

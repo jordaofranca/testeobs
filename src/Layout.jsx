@@ -1,18 +1,12 @@
-import React, { useContext } from "react";
-import clsx from "clsx";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import { SocketContext } from "./obsWebsocket";
-import Nav from "./Nav";
-
-const drawerWidth = 240;
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import { useNavigate, useLocation } from "@reach/router"
+import StatusMenu from "./StatusMenu";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
+    minHeight: 48,
   },
   toolbarIcon: {
     display: "flex",
@@ -37,39 +32,8 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
   },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: 36,
-  },
-  menuButtonHidden: {
-    display: "none",
-  },
   title: {
     flexGrow: 1,
-  },
-  drawerPaper: {
-    position: "relative",
-    whiteSpace: "nowrap",
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerPaperClose: {
-    overflowX: "hidden",
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: 48,
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
@@ -95,14 +59,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Layout({ children }) {
-  const { streaming } = useContext(SocketContext);
+  const navigate = useNavigate();
+  const location = useLocation();
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
+
+  const handleChange = (event, newValue) => {
+    navigate(newValue)
   };
 
   return (
@@ -110,52 +72,21 @@ export default function Layout({ children }) {
       <CssBaseline />
       <AppBar
         position="absolute"
-        className={clsx(classes.appBar, open && classes.appBarShift)}
+        className={classes.appBar}
       >
         <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(
-              classes.menuButton,
-              open && classes.menuButtonHidden
-            )}
+          <Tabs
+            value={location.pathname}
+            onChange={handleChange}
+            aria-label="disabled tabs example"
+            style={{ flexGrow: 1, paddingRight: 24 }}
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
-            Dashboard
-          </Typography>
-          <div>
-          
-          <Typography
-            component="span"
-            variant="h6"
-            color="inherit"
-            noWrap
-          >
-            {streaming ? 'LIVE' : 'OFFLINE'}
-          </Typography>
-          </div>
+            <Tab label="Scenes" value="/" />
+            <Tab label="Audio Board" value="/audio" />
+          </Tabs>
+          <StatusMenu />
         </Toolbar>
       </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <Nav closeDrawer={handleDrawerClose} />
-      </Drawer>
       <main className={classes.content}>{children}</main>
     </div>
   );
