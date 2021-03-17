@@ -7,19 +7,25 @@ const obs = new OBSWebSocket();
 const SocketProvider = ({ children }) => {
   const [obsSocket, setObsSocket] = useState(null);
   const [connected, setConnected] = useState(false);
+  const [streaming, setStreaming] = useState(false);
   const init = ({ url, password }) => {
     return new Promise((resolve, reject) => {
-      const port = parseInt(url.split(':')[1]);
       const options = {
         address: url,
         password: password,
-        secure: port === 443
+        secure: window.location.protocol === "https:",
       };
       console.log("options: ", options);
       obs
         .connect(options)
         .then(() => {
           console.log("connected: ", options);
+          obs.sendCallback("GetStreamingStatus", (err, result) => {
+            if (!err) {
+              console.log(result);
+              setStreaming(result.streaming);
+            }
+          });
           setObsSocket(obs);
           setConnected(true);
           resolve(url);
@@ -49,13 +55,36 @@ const SocketProvider = ({ children }) => {
         setObsSocket(null);
       }
     });
+    obs.on("StreamStarted", (result) => {
+      console.log(result, streaming);
+      setStreaming(true);
+    });
+    obs.on("StreamStopped", (result) => {
+      console.log(result, streaming);
+      setStreaming(false);
+    });
     return () => {
       obs.disconnect();
     };
   }, []);
 
+  const toggleStream = () => {
+    obs.sendCallback("StartStopStreaming", (err, result) => {
+      console.log(result);
+    });
+  };
+
   return (
-    <SocketContext.Provider value={{ obsSocket, connected, init, disconnect }}>
+    <SocketContext.Provider
+      value={{
+        obsSocket,
+        connected,
+        streaming,
+        init,
+        disconnect,
+        toggleStream,
+      }}
+    >
       {children}
     </SocketContext.Provider>
   );

@@ -40,6 +40,7 @@ export default function SceneButtons() {
 
   const handleChangeScene = (sceneName) => {
     console.log(sceneName)
+    window.navigator.vibrate(50);
     obsSocket.send("SetCurrentScene", { 'scene-name': sceneName }).then((result) => {
       setCurrScene(sceneName);
     });

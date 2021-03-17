@@ -38,28 +38,30 @@ const PrettoSlider = withStyles({
     borderRadius: 6,
     backgroundColor: "#currentColor",
     border: "2px solid currentColor",
-    transform: `translateX(calc(-50% + 8px))`,
+    transform: `translateX(calc(-50% + 5px))`,
     "&:focus, &:hover, &$active": {
       boxShadow: "inherit",
     },
   },
   active: {},
   valueLabel: {
-    left: "calc(50% - 14px)",
+    left: "calc(50% - 16px)",
   },
   track: {
     height: 8,
     width: 4,
     border: 'solid #666',
     borderRadius: 4,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    transform: 'translateX(-3px)'
   },
   rail: {
     height: 8,
     width: 4,
     borderRadius: 4,
     border: 'solid #999',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    transform: 'translateX(-3px)'
   },
 })(Slider);
 

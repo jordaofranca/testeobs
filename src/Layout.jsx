@@ -17,7 +17,8 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    height: '100vh'
+    height: "100vh",
+    overflow: "hidden",
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -68,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    width: 0,
+    width: 48,
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
@@ -76,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
     marginTop: 64,
     padding: 20,
-    minWidth: '100%'
+    minWidth: "100%",
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -93,8 +94,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Dashboard({ children }) {
-  const { disconnect } = useContext(SocketContext);
+export default function Layout({ children }) {
+  const { streaming } = useContext(SocketContext);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
@@ -103,10 +104,6 @@ export default function Dashboard({ children }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
-  const logout = () => {
-    disconnect()
-  }
 
   return (
     <div className={classes.root}>
@@ -137,9 +134,17 @@ export default function Dashboard({ children }) {
           >
             Dashboard
           </Typography>
-          <IconButton color="inherit" onClick={logout}>
-            <ExitToAppIcon />
-          </IconButton>
+          <div>
+          
+          <Typography
+            component="span"
+            variant="h6"
+            color="inherit"
+            noWrap
+          >
+            {streaming ? 'LIVE' : 'OFFLINE'}
+          </Typography>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer
