@@ -15,14 +15,11 @@ const SocketProvider = ({ children }) => {
         password: password,
         secure: window.location.protocol === "https:",
       };
-      console.log("options: ", options);
       obs
         .connect(options)
         .then(() => {
-          console.log("connected: ", options);
           obs.sendCallback("GetStreamingStatus", (err, result) => {
             if (!err) {
-              console.log(result);
               setStreaming(result.streaming);
             }
           });
@@ -56,11 +53,9 @@ const SocketProvider = ({ children }) => {
       }
     });
     obs.on("StreamStarted", (result) => {
-      console.log(result, streaming);
       setStreaming(true);
     });
     obs.on("StreamStopped", (result) => {
-      console.log(result, streaming);
       setStreaming(false);
     });
     return () => {
@@ -69,9 +64,7 @@ const SocketProvider = ({ children }) => {
   }, []);
 
   const toggleStream = () => {
-    obs.sendCallback("StartStopStreaming", (err, result) => {
-      console.log(result);
-    });
+    obs.send("StartStopStreaming");
   };
 
   return (

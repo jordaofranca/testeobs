@@ -3,7 +3,6 @@ import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { SocketContext } from "./obsWebsocket";
-import { white } from '@material-ui/core/colors';
 
 export default function StatusMenu() {
   const { toggleStream, streaming, disconnect } = useContext(SocketContext);

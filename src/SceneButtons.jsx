@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import { green, purple } from "@material-ui/core/colors";
 import { SocketContext } from "./obsWebsocket";
 
 const ColorButton = withStyles((theme) => ({
@@ -36,7 +35,7 @@ export default function SceneButtons() {
         setCurrScene(scene.sceneName);
       }
     });
-  }, []);
+  }, [obsSocket]);
 
   const handleChangeScene = (sceneName) => {
     console.log(sceneName)

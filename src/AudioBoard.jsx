@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from "react";
 import { SocketContext } from "./obsWebsocket";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
 
 import Fader from "./Fader";
 
@@ -10,18 +9,13 @@ const AudioBoard = () => {
   const { obsSocket } = useContext(SocketContext);
   const [sources, setSources] = useState([]);
   useEffect(() => {
-    obsSocket.send("GetSourcesList").then((data) => {
-      const audioSources = data.sources.filter(
-        (src) =>
-          src.typeId === "wasapi_input_capture" ||
-          src.typeId === "wasapi_output_capture" ||
-          src.typeId === "soundtrack_global_source" ||
-          src.typeId === "ffmpeg_source" ||
-          src.typeId === "dshow_input"
+    obsSocket.send("GetSpecialSources").then((data) => {
+      const audioSources = Object.keys(data).filter(
+        (key) => key.indexOf("desktop") === 0 || key.indexOf("mic") === 0
       );
       Promise.all(
-        audioSources.map((src) =>
-          obsSocket.send("GetVolume", { source: src.name })
+        audioSources.map((key) =>
+          obsSocket.send("GetVolume", { source: data[key] })
         )
       ).then((values) => {
         setSources(values);
@@ -35,7 +29,7 @@ const AudioBoard = () => {
         display: "flex",
         flexWrap: "wrap",
         justifyContent: "center",
-        alignItems: 'flex-start'
+        alignItems: "flex-start",
       }}
     >
       <Grid container spacing={2}>
